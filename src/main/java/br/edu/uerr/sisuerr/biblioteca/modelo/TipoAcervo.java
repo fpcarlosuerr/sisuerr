@@ -3,12 +3,14 @@ package br.edu.uerr.sisuerr.biblioteca.modelo;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
+import javax.enterprise.context.Dependent;
 
 
 /**
  * The persistent class for the tipo_acervo database table.
  * 
  */
+@Dependent
 @Entity
 @Table(name = "tipo_acervo", schema = "scsisbibli")
 @NamedQuery(name="TipoAcervo.findAll", query="SELECT t FROM TipoAcervo t")
@@ -22,7 +24,7 @@ public class TipoAcervo implements Serializable {
 	private String nome;
 
 	//bi-directional many-to-one association to Acervo
-	@OneToMany(mappedBy="tipoAcervo")
+	//@OneToMany(mappedBy="tipoAcervo")
 	private List<Acervo> acervos;
 
 	public TipoAcervo() {
