@@ -1,4 +1,4 @@
-package br.edu.uerr.sisuerr.comum.controle;
+package br.edu.uerr.sisuerr.util;
 
 import java.lang.annotation.Annotation;
 import java.util.List;

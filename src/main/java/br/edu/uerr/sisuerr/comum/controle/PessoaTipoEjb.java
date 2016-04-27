@@ -5,6 +5,7 @@
  */
 package br.edu.uerr.sisuerr.comum.controle;
 
+import br.edu.uerr.sisuerr.util.AbstractEjb;
 import br.edu.uerr.sisuerr.comum.modelo.PessoaTipo;
 import java.io.Serializable;
 import java.util.ArrayList;

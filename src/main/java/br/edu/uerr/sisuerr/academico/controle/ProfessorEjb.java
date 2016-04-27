@@ -5,8 +5,8 @@
  */
 package br.edu.uerr.sisuerr.academico.controle;
 
+import br.edu.uerr.sisuerr.util.AbstractEjb;
 import br.edu.uerr.sisuerr.academico.modelo.Professor;
-import br.edu.uerr.sisuerr.comum.controle.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

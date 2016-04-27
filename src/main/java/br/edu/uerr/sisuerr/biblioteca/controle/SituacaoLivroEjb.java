@@ -5,8 +5,8 @@
  */
 package br.edu.uerr.sisuerr.biblioteca.controle;
 
+import br.edu.uerr.sisuerr.util.AbstractEjb;
 import br.edu.uerr.sisuerr.biblioteca.modelo.SituacaoLivro;
-import br.edu.uerr.sisuerr.comum.controle.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
