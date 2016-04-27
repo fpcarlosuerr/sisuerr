@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.uerr.sisuerr.comum.controle;
+package br.edu.uerr.sisuerr.biblioteca.controle;
 
-import br.edu.uerr.sisuerr.comum.modelo.Usuario;
+import br.edu.uerr.sisuerr.biblioteca.modelo.SituacaoLivro;
+import br.edu.uerr.sisuerr.comum.controle.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,12 @@ import javax.persistence.PersistenceContext;
  * @author fpcarlos
  */
 @Stateless
-public class UsuarioEjb extends AbstractEjb implements Serializable {
+public class SituacaoLivroEjb extends AbstractEjb implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void salvar(Usuario entity) throws Exception {
+    public void salvar(SituacaoLivro entity) throws Exception {
         try {
             if (entity.getId() != null && entity.getId() > 0) {
                 entityManager.merge(entity);
@@ -35,29 +36,29 @@ public class UsuarioEjb extends AbstractEjb implements Serializable {
         }
     }
 
-    public void remove(Usuario entity) throws Exception {
+    public void remove(SituacaoLivro entity) throws Exception {
         try {
-            Usuario aux = entityManager.find(Usuario.class, entity.getId());
+            SituacaoLivro aux = entityManager.find(SituacaoLivro.class, entity.getId());
             entityManager.remove(aux);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public Usuario pegaUsuarioPeloId(Integer id) throws Exception{
+    public SituacaoLivro pegaSituacaoLivroPeloId(Integer id) throws Exception{
         try {
-            Usuario aux = entityManager.find(Usuario.class, id);
+            SituacaoLivro aux = entityManager.find(SituacaoLivro.class, id);
             return aux;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public List<Usuario> findAll() throws Exception {
+    public List<SituacaoLivro> findAll() throws Exception {
 		try {
-			List<Usuario> lista = new ArrayList<>();
-	  		String sql = "select * from scsiscomum.usuario";
-			lista = executaSqlNativo(sql, Usuario.class, entityManager);
+			List<SituacaoLivro> lista = new ArrayList<>();
+	  		String sql = "select * from scsisbibli.situacao_livro";
+			lista = executaSqlNativo(sql, SituacaoLivro.class, entityManager);
 			return lista;
 
 		} catch (RuntimeException re) {

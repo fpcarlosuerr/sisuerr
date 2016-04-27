@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.uerr.sisuerr.comum.controle;
+package br.edu.uerr.sisuerr.biblioteca.controle;
 
-import br.edu.uerr.sisuerr.comum.modelo.Usuario;
+import br.edu.uerr.sisuerr.biblioteca.modelo.Acervo;
+import br.edu.uerr.sisuerr.comum.controle.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,12 @@ import javax.persistence.PersistenceContext;
  * @author fpcarlos
  */
 @Stateless
-public class UsuarioEjb extends AbstractEjb implements Serializable {
+public class AcervoEjb extends AbstractEjb implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void salvar(Usuario entity) throws Exception {
+    public void salvar(Acervo entity) throws Exception {
         try {
             if (entity.getId() != null && entity.getId() > 0) {
                 entityManager.merge(entity);
@@ -35,29 +36,29 @@ public class UsuarioEjb extends AbstractEjb implements Serializable {
         }
     }
 
-    public void remove(Usuario entity) throws Exception {
+    public void remove(Acervo entity) throws Exception {
         try {
-            Usuario aux = entityManager.find(Usuario.class, entity.getId());
+            Acervo aux = entityManager.find(Acervo.class, entity.getId());
             entityManager.remove(aux);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public Usuario pegaUsuarioPeloId(Integer id) throws Exception{
+    public Acervo pegaAcervoPeloId(Integer id) throws Exception{
         try {
-            Usuario aux = entityManager.find(Usuario.class, id);
+            Acervo aux = entityManager.find(Acervo.class, id);
             return aux;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public List<Usuario> findAll() throws Exception {
+    public List<Acervo> findAll() throws Exception {
 		try {
-			List<Usuario> lista = new ArrayList<>();
-	  		String sql = "select * from scsiscomum.usuario";
-			lista = executaSqlNativo(sql, Usuario.class, entityManager);
+			List<Acervo> lista = new ArrayList<>();
+	  		String sql = "select * from scsisbibli.acervo";
+			lista = executaSqlNativo(sql, Acervo.class, entityManager);
 			return lista;
 
 		} catch (RuntimeException re) {

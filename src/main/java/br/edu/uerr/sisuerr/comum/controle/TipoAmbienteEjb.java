@@ -5,7 +5,7 @@
  */
 package br.edu.uerr.sisuerr.comum.controle;
 
-import br.edu.uerr.sisuerr.comum.modelo.Usuario;
+import br.edu.uerr.sisuerr.comum.modelo.TipoAmbiente;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +18,12 @@ import javax.persistence.PersistenceContext;
  * @author fpcarlos
  */
 @Stateless
-public class UsuarioEjb extends AbstractEjb implements Serializable {
+public class TipoAmbienteEjb extends AbstractEjb implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void salvar(Usuario entity) throws Exception {
+    public void salvar(TipoAmbiente entity) throws Exception {
         try {
             if (entity.getId() != null && entity.getId() > 0) {
                 entityManager.merge(entity);
@@ -35,29 +35,29 @@ public class UsuarioEjb extends AbstractEjb implements Serializable {
         }
     }
 
-    public void remove(Usuario entity) throws Exception {
+    public void remove(TipoAmbiente entity) throws Exception {
         try {
-            Usuario aux = entityManager.find(Usuario.class, entity.getId());
+            TipoAmbiente aux = entityManager.find(TipoAmbiente.class, entity.getId());
             entityManager.remove(aux);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public Usuario pegaUsuarioPeloId(Integer id) throws Exception{
+    public TipoAmbiente pegaTipoAmbientePeloId(Integer id) throws Exception{
         try {
-            Usuario aux = entityManager.find(Usuario.class, id);
+            TipoAmbiente aux = entityManager.find(TipoAmbiente.class, id);
             return aux;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public List<Usuario> findAll() throws Exception {
+    public List<TipoAmbiente> findAll() throws Exception {
 		try {
-			List<Usuario> lista = new ArrayList<>();
-	  		String sql = "select * from scsiscomum.usuario";
-			lista = executaSqlNativo(sql, Usuario.class, entityManager);
+			List<TipoAmbiente> lista = new ArrayList<>();
+	  		String sql = "select * from scsisloc.tipo_ambiente";
+			lista = executaSqlNativo(sql, TipoAmbiente.class, entityManager);
 			return lista;
 
 		} catch (RuntimeException re) {

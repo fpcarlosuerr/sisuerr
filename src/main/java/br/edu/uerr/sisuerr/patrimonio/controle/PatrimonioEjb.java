@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.uerr.sisuerr.comum.controle;
+package br.edu.uerr.sisuerr.patrimonio.controle;
 
-import br.edu.uerr.sisuerr.comum.modelo.Usuario;
+import br.edu.uerr.sisuerr.comum.controle.*;
+import br.edu.uerr.sisuerr.patrimonio.modelo.Patrimonio;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,12 @@ import javax.persistence.PersistenceContext;
  * @author fpcarlos
  */
 @Stateless
-public class UsuarioEjb extends AbstractEjb implements Serializable {
+public class PatrimonioEjb extends AbstractEjb implements Serializable {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void salvar(Usuario entity) throws Exception {
+    public void salvar(Patrimonio entity) throws Exception {
         try {
             if (entity.getId() != null && entity.getId() > 0) {
                 entityManager.merge(entity);
@@ -35,29 +36,29 @@ public class UsuarioEjb extends AbstractEjb implements Serializable {
         }
     }
 
-    public void remove(Usuario entity) throws Exception {
+    public void remove(Patrimonio entity) throws Exception {
         try {
-            Usuario aux = entityManager.find(Usuario.class, entity.getId());
+            Patrimonio aux = entityManager.find(Patrimonio.class, entity.getId());
             entityManager.remove(aux);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public Usuario pegaUsuarioPeloId(Integer id) throws Exception{
+    public Patrimonio pegaPatrimonioPeloId(Integer id) throws Exception{
         try {
-            Usuario aux = entityManager.find(Usuario.class, id);
+            Patrimonio aux = entityManager.find(Patrimonio.class, id);
             return aux;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
     
-    public List<Usuario> findAll() throws Exception {
+    public List<Patrimonio> findAll() throws Exception {
 		try {
-			List<Usuario> lista = new ArrayList<>();
-	  		String sql = "select * from scsiscomum.usuario";
-			lista = executaSqlNativo(sql, Usuario.class, entityManager);
+			List<Patrimonio> lista = new ArrayList<>();
+	  		String sql = "select * from scsispat.patrimonio";
+			lista = executaSqlNativo(sql, Patrimonio.class, entityManager);
 			return lista;
 
 		} catch (RuntimeException re) {
