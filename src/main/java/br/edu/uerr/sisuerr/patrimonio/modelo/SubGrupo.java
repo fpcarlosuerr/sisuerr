@@ -1,82 +1,121 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package br.edu.uerr.sisuerr.patrimonio.modelo;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
-
+import javax.enterprise.context.Dependent;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * The persistent class for the sub_grupo database table.
- * 
+ *
+ * @author fpcarlos
  */
+@Dependent
 @Entity
-@Table(name="sub_grupo", schema = "scsispat")
-@NamedQuery(name="SubGrupo.findAll", query="SELECT s FROM SubGrupo s")
+@Table(name = "sub_grupo", schema = "scsispat")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "SubGrupo.findAll", query = "SELECT s FROM SubGrupo s"),
+    @NamedQuery(name = "SubGrupo.findById", query = "SELECT s FROM SubGrupo s WHERE s.id = :id"),
+    @NamedQuery(name = "SubGrupo.findByNome", query = "SELECT s FROM SubGrupo s WHERE s.nome = :nome")})
 public class SubGrupo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Size(max = 2147483647)
+    @Column(name = "nome")
+    private String nome;
+    @OneToMany(mappedBy = "idSubGrupo")
+    private List<Material> materialList;
+    @JoinColumn(name = "id_grupo", referencedColumnName = "id")
+    @ManyToOne
+    private Grupo idGrupo;
 
-	private String nome;
+    public SubGrupo() {
+    }
 
-	//bi-directional many-to-one association to Material
-	@OneToMany(mappedBy="subGrupo")
-	private List<Material> materials;
+    public SubGrupo(Integer id) {
+        this.id = id;
+    }
 
-	//bi-directional many-to-one association to Grupo
-	@ManyToOne
-	@JoinColumn(name="id_grupo")
-	private Grupo grupo;
+    public Integer getId() {
+        return id;
+    }
 
-	public SubGrupo() {
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public String getNome() {
-		return this.nome;
-	}
+    @XmlTransient
+    public List<Material> getMaterialList() {
+        return materialList;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setMaterialList(List<Material> materialList) {
+        this.materialList = materialList;
+    }
 
-	public List<Material> getMaterials() {
-		return this.materials;
-	}
+    public Grupo getIdGrupo() {
+        return idGrupo;
+    }
 
-	public void setMaterials(List<Material> materials) {
-		this.materials = materials;
-	}
+    public void setIdGrupo(Grupo idGrupo) {
+        this.idGrupo = idGrupo;
+    }
 
-	public Material addMaterial(Material material) {
-		getMaterials().add(material);
-		material.setSubGrupo(this);
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
 
-		return material;
-	}
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof SubGrupo)) {
+            return false;
+        }
+        SubGrupo other = (SubGrupo) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 
-	public Material removeMaterial(Material material) {
-		getMaterials().remove(material);
-		material.setSubGrupo(null);
-
-		return material;
-	}
-
-	public Grupo getGrupo() {
-		return this.grupo;
-	}
-
-	public void setGrupo(Grupo grupo) {
-		this.grupo = grupo;
-	}
-
+    @Override
+    public String toString() {
+        return "br.edu.uerr.sisuerr.patrimonio.modelo.SubGrupo[ id=" + id + " ]";
+    }
+    
 }

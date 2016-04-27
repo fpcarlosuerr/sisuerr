@@ -1,96 +1,119 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package br.edu.uerr.sisuerr.academico.modelo;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
-import br.edu.uerr.sisuerr.academico.modelo.Professor;
-
+import javax.enterprise.context.Dependent;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * The persistent class for the curso database table.
- * 
+ *
+ * @author fpcarlos
  */
+@Dependent
 @Entity
-@Table(name = "curso",schema = "scsisacademico")
-@NamedQuery(name="Curso.findAll", query="SELECT c FROM Curso c")
+@Table(name = "curso", schema = "scsisacademico")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Curso.findAll", query = "SELECT c FROM Curso c"),
+    @NamedQuery(name = "Curso.findById", query = "SELECT c FROM Curso c WHERE c.id = :id"),
+    @NamedQuery(name = "Curso.findByNome", query = "SELECT c FROM Curso c WHERE c.nome = :nome")})
 public class Curso implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Size(max = 2147483647)
+    @Column(name = "nome")
+    private String nome;
+    @OneToMany(mappedBy = "idCurso")
+    private List<Aluno> alunoList;
+    @OneToMany(mappedBy = "idCurso")
+    private List<Professor> professorList;
 
-	private String nome;
+    public Curso() {
+    }
 
-	//bi-directional many-to-one association to CursoAluno
-	@OneToMany(mappedBy="curso")
-	private List<CursoAluno> cursoAlunos;
+    public Curso(Integer id) {
+        this.id = id;
+    }
 
-	//bi-directional many-to-one association to Professor
-	@OneToMany(mappedBy="curso")
-	private List<Professor> professors;
+    public Integer getId() {
+        return id;
+    }
 
-	public Curso() {
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public String getNome() {
-		return this.nome;
-	}
+    @XmlTransient
+    public List<Aluno> getAlunoList() {
+        return alunoList;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setAlunoList(List<Aluno> alunoList) {
+        this.alunoList = alunoList;
+    }
 
-	public List<CursoAluno> getCursoAlunos() {
-		return this.cursoAlunos;
-	}
+    @XmlTransient
+    public List<Professor> getProfessorList() {
+        return professorList;
+    }
 
-	public void setCursoAlunos(List<CursoAluno> cursoAlunos) {
-		this.cursoAlunos = cursoAlunos;
-	}
+    public void setProfessorList(List<Professor> professorList) {
+        this.professorList = professorList;
+    }
 
-	public CursoAluno addCursoAluno(CursoAluno cursoAluno) {
-		getCursoAlunos().add(cursoAluno);
-		cursoAluno.setCurso(this);
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
 
-		return cursoAluno;
-	}
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Curso)) {
+            return false;
+        }
+        Curso other = (Curso) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 
-	public CursoAluno removeCursoAluno(CursoAluno cursoAluno) {
-		getCursoAlunos().remove(cursoAluno);
-		cursoAluno.setCurso(null);
-
-		return cursoAluno;
-	}
-
-	public List<Professor> getProfessors() {
-		return this.professors;
-	}
-
-	public void setProfessors(List<Professor> professors) {
-		this.professors = professors;
-	}
-
-	public Professor addProfessor(Professor professor) {
-		getProfessors().add(professor);
-		professor.setCurso(this);
-
-		return professor;
-	}
-
-	public Professor removeProfessor(Professor professor) {
-		getProfessors().remove(professor);
-		professor.setCurso(null);
-
-		return professor;
-	}
-
+    @Override
+    public String toString() {
+        return "br.edu.uerr.sisuerr.academico.modelo.Curso[ id=" + id + " ]";
+    }
+    
 }

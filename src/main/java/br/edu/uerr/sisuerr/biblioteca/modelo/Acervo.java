@@ -1,221 +1,281 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package br.edu.uerr.sisuerr.biblioteca.modelo;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
-
+import javax.enterprise.context.Dependent;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * The persistent class for the acervo database table.
- * 
+ *
+ * @author fpcarlos
  */
+@Dependent
 @Entity
 @Table(name = "acervo", schema = "scsisbibli")
-@NamedQuery(name="Acervo.findAll", query="SELECT a FROM Acervo a")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Acervo.findAll", query = "SELECT a FROM Acervo a"),
+    @NamedQuery(name = "Acervo.findById", query = "SELECT a FROM Acervo a WHERE a.id = :id"),
+    @NamedQuery(name = "Acervo.findByAnoPublicacao", query = "SELECT a FROM Acervo a WHERE a.anoPublicacao = :anoPublicacao"),
+    @NamedQuery(name = "Acervo.findByEditora", query = "SELECT a FROM Acervo a WHERE a.editora = :editora"),
+    @NamedQuery(name = "Acervo.findByResumo", query = "SELECT a FROM Acervo a WHERE a.resumo = :resumo"),
+    @NamedQuery(name = "Acervo.findByEdicao", query = "SELECT a FROM Acervo a WHERE a.edicao = :edicao"),
+    @NamedQuery(name = "Acervo.findByVolume", query = "SELECT a FROM Acervo a WHERE a.volume = :volume"),
+    @NamedQuery(name = "Acervo.findBySerie", query = "SELECT a FROM Acervo a WHERE a.serie = :serie"),
+    @NamedQuery(name = "Acervo.findByNumeroPaginas", query = "SELECT a FROM Acervo a WHERE a.numeroPaginas = :numeroPaginas"),
+    @NamedQuery(name = "Acervo.findByNumeroDaChamada", query = "SELECT a FROM Acervo a WHERE a.numeroDaChamada = :numeroDaChamada"),
+    @NamedQuery(name = "Acervo.findByQuantidadeExemplar", query = "SELECT a FROM Acervo a WHERE a.quantidadeExemplar = :quantidadeExemplar"),
+    @NamedQuery(name = "Acervo.findByTitulo", query = "SELECT a FROM Acervo a WHERE a.titulo = :titulo"),
+    @NamedQuery(name = "Acervo.findByLocalPublicacao", query = "SELECT a FROM Acervo a WHERE a.localPublicacao = :localPublicacao")})
 public class Acervo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Size(max = 4)
+    @Column(name = "ano_publicacao")
+    private String anoPublicacao;
+    @Size(max = 2147483647)
+    @Column(name = "editora")
+    private String editora;
+    @Size(max = 2147483647)
+    @Column(name = "resumo")
+    private String resumo;
+    @Lob
+    @Column(name = "capa")
+    private byte[] capa;
+    @Size(max = 2147483647)
+    @Column(name = "edicao")
+    private String edicao;
+    @Size(max = 3)
+    @Column(name = "volume")
+    private String volume;
+    @Size(max = 100)
+    @Column(name = "serie")
+    private String serie;
+    @Column(name = "numero_paginas")
+    private Integer numeroPaginas;
+    @Size(max = 2147483647)
+    @Column(name = "numero_da_chamada")
+    private String numeroDaChamada;
+    @Column(name = "quantidade_exemplar")
+    private Integer quantidadeExemplar;
+    @Size(max = 2147483647)
+    @Column(name = "titulo")
+    private String titulo;
+    @Size(max = 2147483647)
+    @Column(name = "local_publicacao")
+    private String localPublicacao;
+    @JoinTable(name = "autor_acervo", joinColumns = {
+        @JoinColumn(name = "id_acervo", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "id_autor", referencedColumnName = "id")})
+    @ManyToMany
+    private List<Autor> autorList;
+    @JoinTable(name = "palavra_chave_acervo", joinColumns = {
+        @JoinColumn(name = "id_acervo", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "id_palavra_chave", referencedColumnName = "id")})
+    @ManyToMany
+    private List<PalavraChave> palavraChaveList;
+    @JoinColumn(name = "id_tipo_acervo", referencedColumnName = "id")
+    @ManyToOne
+    private TipoAcervo idTipoAcervo;
+    @OneToMany(mappedBy = "idAcervo")
+    private List<Livro> livroList;
 
-	@Column(name="ano_publicacao")
-	private String anoPublicacao;
+    public Acervo() {
+    }
 
-	private byte[] capa;
+    public Acervo(Integer id) {
+        this.id = id;
+    }
 
-	private String edicao;
+    public Integer getId() {
+        return id;
+    }
 
-	private String editora;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	@Column(name="local_publicacao")
-	private String localPublicacao;
+    public String getAnoPublicacao() {
+        return anoPublicacao;
+    }
 
-	@Column(name="numero_da_chamada")
-	private String numeroDaChamada;
+    public void setAnoPublicacao(String anoPublicacao) {
+        this.anoPublicacao = anoPublicacao;
+    }
 
-	@Column(name="numero_paginas")
-	private Integer numeroPaginas;
+    public String getEditora() {
+        return editora;
+    }
 
-	@Column(name="quantidade_exemplar")
-	private Integer quantidadeExemplar;
+    public void setEditora(String editora) {
+        this.editora = editora;
+    }
 
-	private String resumo;
+    public String getResumo() {
+        return resumo;
+    }
 
-	private String serie;
+    public void setResumo(String resumo) {
+        this.resumo = resumo;
+    }
 
-	private String titulo;
+    public byte[] getCapa() {
+        return capa;
+    }
 
-	private String volume;
+    public void setCapa(byte[] capa) {
+        this.capa = capa;
+    }
 
-	//bi-directional many-to-one association to TipoAcervo
-	@ManyToOne
-	@JoinColumn(name="id_tipo_acervo")
-	private TipoAcervo tipoAcervo;
+    public String getEdicao() {
+        return edicao;
+    }
 
-	//bi-directional many-to-many association to Autor
-	@ManyToMany(mappedBy="acervos")
-	private List<Autor> autors;
+    public void setEdicao(String edicao) {
+        this.edicao = edicao;
+    }
 
-	//bi-directional many-to-one association to Livro
-	@OneToMany(mappedBy="acervo")
-	private List<Livro> livros;
+    public String getVolume() {
+        return volume;
+    }
 
-	//bi-directional many-to-many association to PalavraChave
-	@ManyToMany(mappedBy="acervos")
-	private List<PalavraChave> palavraChaves;
+    public void setVolume(String volume) {
+        this.volume = volume;
+    }
 
-	public Acervo() {
-	}
+    public String getSerie() {
+        return serie;
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    public void setSerie(String serie) {
+        this.serie = serie;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getNumeroPaginas() {
+        return numeroPaginas;
+    }
 
-	public String getAnoPublicacao() {
-		return this.anoPublicacao;
-	}
+    public void setNumeroPaginas(Integer numeroPaginas) {
+        this.numeroPaginas = numeroPaginas;
+    }
 
-	public void setAnoPublicacao(String anoPublicacao) {
-		this.anoPublicacao = anoPublicacao;
-	}
+    public String getNumeroDaChamada() {
+        return numeroDaChamada;
+    }
 
-	public byte[] getCapa() {
-		return this.capa;
-	}
+    public void setNumeroDaChamada(String numeroDaChamada) {
+        this.numeroDaChamada = numeroDaChamada;
+    }
 
-	public void setCapa(byte[] capa) {
-		this.capa = capa;
-	}
+    public Integer getQuantidadeExemplar() {
+        return quantidadeExemplar;
+    }
 
-	public String getEdicao() {
-		return this.edicao;
-	}
+    public void setQuantidadeExemplar(Integer quantidadeExemplar) {
+        this.quantidadeExemplar = quantidadeExemplar;
+    }
 
-	public void setEdicao(String edicao) {
-		this.edicao = edicao;
-	}
+    public String getTitulo() {
+        return titulo;
+    }
 
-	public String getEditora() {
-		return this.editora;
-	}
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
-	public void setEditora(String editora) {
-		this.editora = editora;
-	}
+    public String getLocalPublicacao() {
+        return localPublicacao;
+    }
 
-	public String getLocalPublicacao() {
-		return this.localPublicacao;
-	}
+    public void setLocalPublicacao(String localPublicacao) {
+        this.localPublicacao = localPublicacao;
+    }
 
-	public void setLocalPublicacao(String localPublicacao) {
-		this.localPublicacao = localPublicacao;
-	}
+    @XmlTransient
+    public List<Autor> getAutorList() {
+        return autorList;
+    }
 
-	public String getNumeroDaChamada() {
-		return this.numeroDaChamada;
-	}
+    public void setAutorList(List<Autor> autorList) {
+        this.autorList = autorList;
+    }
 
-	public void setNumeroDaChamada(String numeroDaChamada) {
-		this.numeroDaChamada = numeroDaChamada;
-	}
+    @XmlTransient
+    public List<PalavraChave> getPalavraChaveList() {
+        return palavraChaveList;
+    }
 
-	public Integer getNumeroPaginas() {
-		return this.numeroPaginas;
-	}
+    public void setPalavraChaveList(List<PalavraChave> palavraChaveList) {
+        this.palavraChaveList = palavraChaveList;
+    }
 
-	public void setNumeroPaginas(Integer numeroPaginas) {
-		this.numeroPaginas = numeroPaginas;
-	}
+    public TipoAcervo getIdTipoAcervo() {
+        return idTipoAcervo;
+    }
 
-	public Integer getQuantidadeExemplar() {
-		return this.quantidadeExemplar;
-	}
+    public void setIdTipoAcervo(TipoAcervo idTipoAcervo) {
+        this.idTipoAcervo = idTipoAcervo;
+    }
 
-	public void setQuantidadeExemplar(Integer quantidadeExemplar) {
-		this.quantidadeExemplar = quantidadeExemplar;
-	}
+    @XmlTransient
+    public List<Livro> getLivroList() {
+        return livroList;
+    }
 
-	public String getResumo() {
-		return this.resumo;
-	}
+    public void setLivroList(List<Livro> livroList) {
+        this.livroList = livroList;
+    }
 
-	public void setResumo(String resumo) {
-		this.resumo = resumo;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
 
-	public String getSerie() {
-		return this.serie;
-	}
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Acervo)) {
+            return false;
+        }
+        Acervo other = (Acervo) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 
-	public void setSerie(String serie) {
-		this.serie = serie;
-	}
-
-	public String getTitulo() {
-		return this.titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getVolume() {
-		return this.volume;
-	}
-
-	public void setVolume(String volume) {
-		this.volume = volume;
-	}
-
-	public TipoAcervo getTipoAcervo() {
-		return this.tipoAcervo;
-	}
-
-	public void setTipoAcervo(TipoAcervo tipoAcervo) {
-		this.tipoAcervo = tipoAcervo;
-	}
-
-	public List<Autor> getAutors() {
-		return this.autors;
-	}
-
-	public void setAutors(List<Autor> autors) {
-		this.autors = autors;
-	}
-
-	public List<Livro> getLivros() {
-		return this.livros;
-	}
-
-	public void setLivros(List<Livro> livros) {
-		this.livros = livros;
-	}
-
-	public Livro addLivro(Livro livro) {
-		getLivros().add(livro);
-		livro.setAcervo(this);
-
-		return livro;
-	}
-
-	public Livro removeLivro(Livro livro) {
-		getLivros().remove(livro);
-		livro.setAcervo(null);
-
-		return livro;
-	}
-
-	public List<PalavraChave> getPalavraChaves() {
-		return this.palavraChaves;
-	}
-
-	public void setPalavraChaves(List<PalavraChave> palavraChaves) {
-		this.palavraChaves = palavraChaves;
-	}
-
+    @Override
+    public String toString() {
+        return "br.edu.uerr.sisuerr.biblioteca.modelo.Acervo[ id=" + id + " ]";
+    }
+    
 }

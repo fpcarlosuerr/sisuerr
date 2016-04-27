@@ -1,142 +1,195 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package br.edu.uerr.sisuerr.comum.modelo;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-
+import javax.enterprise.context.Dependent;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * The persistent class for the pessoa database table.
- * 
+ *
+ * @author fpcarlos
  */
+@Dependent
 @Entity
-@Table(name = "pessoa", schema = "sccomum")
-@NamedQuery(name="Pessoa.findAll", query="SELECT p FROM Pessoa p")
+@Table(name = "pessoa", schema = "scsiscomum")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Pessoa.findAll", query = "SELECT p FROM Pessoa p"),
+    @NamedQuery(name = "Pessoa.findById", query = "SELECT p FROM Pessoa p WHERE p.id = :id"),
+    @NamedQuery(name = "Pessoa.findByNome", query = "SELECT p FROM Pessoa p WHERE p.nome = :nome"),
+    @NamedQuery(name = "Pessoa.findByCpf", query = "SELECT p FROM Pessoa p WHERE p.cpf = :cpf"),
+    @NamedQuery(name = "Pessoa.findByRg", query = "SELECT p FROM Pessoa p WHERE p.rg = :rg"),
+    @NamedQuery(name = "Pessoa.findByDataNascimento", query = "SELECT p FROM Pessoa p WHERE p.dataNascimento = :dataNascimento"),
+    @NamedQuery(name = "Pessoa.findBySexo", query = "SELECT p FROM Pessoa p WHERE p.sexo = :sexo"),
+    @NamedQuery(name = "Pessoa.findByTelefone", query = "SELECT p FROM Pessoa p WHERE p.telefone = :telefone"),
+    @NamedQuery(name = "Pessoa.findByCelular", query = "SELECT p FROM Pessoa p WHERE p.celular = :celular"),
+    @NamedQuery(name = "Pessoa.findByEmail", query = "SELECT p FROM Pessoa p WHERE p.email = :email")})
 public class Pessoa implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
+    @Size(max = 2147483647)
+    @Column(name = "nome")
+    private String nome;
+    @Size(max = 2147483647)
+    @Column(name = "cpf")
+    private String cpf;
+    @Size(max = 2147483647)
+    @Column(name = "rg")
+    private String rg;
+    @Column(name = "data_nascimento")
+    @Temporal(TemporalType.DATE)
+    private Date dataNascimento;
+    @Column(name = "sexo")
+    private Character sexo;
+    @Size(max = 2147483647)
+    @Column(name = "telefone")
+    private String telefone;
+    @Size(max = 2147483647)
+    @Column(name = "celular")
+    private String celular;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="E-mail inválido")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 2147483647)
+    @Column(name = "email")
+    private String email;
+    @OneToMany(mappedBy = "idPessoa")
+    private List<PessoaTipo> pessoaTipoList;
 
-	private String celular;
+    public Pessoa() {
+    }
 
-	private String cpf;
+    public Pessoa(Integer id) {
+        this.id = id;
+    }
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="data_nascimento")
-	private Date dataNascimento;
+    public Integer getId() {
+        return id;
+    }
 
-	private String email;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	private String nome;
+    public String getNome() {
+        return nome;
+    }
 
-	private String rg;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	private String sexo;
+    public String getCpf() {
+        return cpf;
+    }
 
-	private String telefone;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
-	//bi-directional many-to-one association to PessoaTipo
-	@OneToMany(mappedBy="pessoa")
-	private List<PessoaTipo> pessoaTipos;
+    public String getRg() {
+        return rg;
+    }
 
-	public Pessoa() {
-	}
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
+    }
 
-	public String getCelular() {
-		return this.celular;
-	}
+    public Character getSexo() {
+        return sexo;
+    }
 
-	public void setCelular(String celular) {
-		this.celular = celular;
-	}
+    public void setSexo(Character sexo) {
+        this.sexo = sexo;
+    }
 
-	public String getCpf() {
-		return this.cpf;
-	}
+    public String getTelefone() {
+        return telefone;
+    }
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
 
-	public Date getDataNascimento() {
-		return this.dataNascimento;
-	}
+    public String getCelular() {
+        return celular;
+    }
 
-	public void setDataNascimento(Date dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
 
-	public String getEmail() {
-		return this.email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getNome() {
-		return this.nome;
-	}
+    @XmlTransient
+    public List<PessoaTipo> getPessoaTipoList() {
+        return pessoaTipoList;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setPessoaTipoList(List<PessoaTipo> pessoaTipoList) {
+        this.pessoaTipoList = pessoaTipoList;
+    }
 
-	public String getRg() {
-		return this.rg;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
 
-	public void setRg(String rg) {
-		this.rg = rg;
-	}
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Pessoa)) {
+            return false;
+        }
+        Pessoa other = (Pessoa) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
 
-	public String getSexo() {
-		return this.sexo;
-	}
-
-	public void setSexo(String sexo) {
-		this.sexo = sexo;
-	}
-
-	public String getTelefone() {
-		return this.telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-	public List<PessoaTipo> getPessoaTipos() {
-		return this.pessoaTipos;
-	}
-
-	public void setPessoaTipos(List<PessoaTipo> pessoaTipos) {
-		this.pessoaTipos = pessoaTipos;
-	}
-
-	public PessoaTipo addPessoaTipo(PessoaTipo pessoaTipo) {
-		getPessoaTipos().add(pessoaTipo);
-		pessoaTipo.setPessoa(this);
-
-		return pessoaTipo;
-	}
-
-	public PessoaTipo removePessoaTipo(PessoaTipo pessoaTipo) {
-		getPessoaTipos().remove(pessoaTipo);
-		pessoaTipo.setPessoa(null);
-
-		return pessoaTipo;
-	}
-
+    @Override
+    public String toString() {
+        return "br.edu.uerr.sisuerr.comum.modelo.Pessoa[ id=" + id + " ]";
+    }
+    
 }
